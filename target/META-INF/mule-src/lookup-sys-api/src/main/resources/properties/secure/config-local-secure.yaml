@@ -1,0 +1,7 @@
+# Local Secure Credentials
+  
+# Anypoint MQ Credentials
+
+anypointMq:
+  clientAppId: "![SsFVpxZA/wcDcSHnBsApCd5B1Hc4vz/PzWUjF+P54XERPBcK0HUoGA==]"
+  clientAppSecret: "![H8Th8IgNHxfVu7clVxLnlfSQVMIdwSu27AuRn8tTt60rKFBjV6OUmw==]"

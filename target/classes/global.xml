@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:anypoint-mq="http://www.mulesoft.org/schema/mule/anypoint-mq"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/anypoint-mq http://www.mulesoft.org/schema/mule/anypoint-mq/current/mule-anypoint-mq.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+		<http:listener-config name="http-listener-config" doc:name="HTTP Listener config" doc:id="5eded406-b645-4691-9268-ec25c133ea8e">
+		<http:listener-connection host="${http.host}" port="${http.port}" connectionIdleTimeout="${http.connectionIdleTimeout}">
+			<reconnection >
+				<reconnect frequency="${http.reconnection.frequency}" count="${http.reconnection.attempts}" />
+			</reconnection>
+		</http:listener-connection>
+	</http:listener-config>
+	<anypoint-mq:config name="anypoint-mq-config" doc:name="Anypoint MQ Config" doc:id="7d1ca349-d306-4628-bee1-aeab2f2c219b" >
+		<anypoint-mq:connection url="${anypointMq.url}" clientId="${secure::anypointMq.clientAppId}" clientSecret="${secure::anypointMq.clientAppSecret}" />
+	</anypoint-mq:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="2ea388de-0bb0-4324-8cf6-f2c5642138bf" file="properties\config-${mule.env}.yaml" />
+	<secure-properties:config name="secure-properties-config" doc:name="Secure Properties Config" doc:id="936b34bd-4b52-4ae5-855d-52c0052f0b09" file="properties\secure\config-local-secure.yaml" key="${mule.key}" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<global-property doc:name="Global Property" doc:id="71d68e77-2189-4928-a594-52818e9ef3dd" name="mule.env" value="local" />
+	<global-property doc:name="Global Property" doc:id="40fbc084-87ef-4fa5-b67b-55d41f34c660" name="mule.key" value="1234567890" />
+</mule>

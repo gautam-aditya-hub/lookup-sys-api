@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="lookup-sys-api-test-suite.xml" />
+	<munit:test name="lookup-sys-api-test-success-queue" doc:id="dc634bcb-2a4c-4042-9626-0539d2ed0fc4" description="Test">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="lookup-sys-api-flow-consume" />
+		</munit:enable-flow-sources>
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="MOCK : Publish to trade queue" doc:id="64911a22-2d6f-49d4-910d-ad5c59248367" processor="anypoint-mq:publish">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="e87031d6-9acc-426c-9fee-8db0943604b1" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[readUrl('classpath://request/mockPublishResponse.dwl')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="MOCK : Consume from trade queue" doc:id="75405067-4e98-44ea-93e0-b4789a91e7c4" processor="anypoint-mq:consume">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="10eca147-e0ab-40e1-a85d-eb6dd54c91d8" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[readUrl('classpath://request/mockConsumeResponse.dwl')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Input Payload" doc:id="4d6a00f1-b8e8-4b26-aeb5-bbde2fe21e92" >
+				<munit:payload value="#[readUrl('classpath://request/setInputPayload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to lookup-sys-api-flow-publish" doc:id="fd77ab0c-4a3f-4ce7-845f-e5a47e06a22b" name="lookup-sys-api-flow-publish"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify End Logger" doc:id="304f33a7-bd0b-4b8e-b588-4c88ad666dfc" processor="logger">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="bba28e0d-b955-4612-b1a2-e12be0ae2e7d" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="bba28e0d-b955-4612-b1a2-e12be0ae2e7d" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="lookup-sys-api-test-failed-queue-any-error" doc:id="df4fa601-4e94-4e9f-bff8-29ed66bacb04" description="Test" expectedErrorType="ANY">
+		<munit:enable-flow-sources >
+			
+			<munit:enable-flow-source value="lookup-sys-api-flow-consume" />
+		</munit:enable-flow-sources>
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="MOCK : Publish to trade queue" doc:id="1b783ab7-5382-41b2-925c-84008c2e3b78" processor="anypoint-mq:publish" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="e87031d6-9acc-426c-9fee-8db0943604b1" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="ANYPOINT-MQ:DESTINATION_NOT_FOUND" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="MOCK : Consume from trade queue" doc:id="5105c831-4428-4f3e-9b65-ddfbbaaeea8b" processor="anypoint-mq:consume" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="10eca147-e0ab-40e1-a85d-eb6dd54c91d8" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[readUrl('classpath://request/mockPublishResponse.dwl')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="edcc37f9-95b5-409b-adee-844dcb4847e4" />
+			<flow-ref doc:name="Flow-ref to lookup-sys-api-flow-publish" doc:id="0980f887-61f7-459f-912f-2e2263910936" name="lookup-sys-api-flow-publish" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify End Logger" doc:id="96f38acc-6fe2-4a0f-b328-4b9300c3f14d" processor="logger" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="083db441-8696-4bf1-bac3-a57e42f809a7" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>
