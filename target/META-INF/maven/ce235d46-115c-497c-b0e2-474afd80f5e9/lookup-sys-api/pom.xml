@@ -31,17 +31,19 @@
 				<version>${mule.maven.plugin.version}</version>
 				<extensions>true</extensions>
 				<configuration>
-					<cloudhub2Deployment>
+					<cloudhubDeployment>
 				    	<uri>https://anypoint.mulesoft.com</uri>
-				    	<provider>MC</provider>
+				    	<!--  provider>MC</provider-->
 				      	<environment>DEV</environment>
-				      	<server>Exchange2</server>
-				      	<target>Cloudhub-AP-Southeast-1</target>
+				      	<!--server>Exchange2</server-->
+					    <username>${username}</username>
+					    <password>${password}</password>
+				      	<target>us-east-1</target>
 				      	<muleVersion>4.4.0</muleVersion>
 				      	<applicationName>ag-lookup-sys-api-dev</applicationName>
-				      	<replicas>1</replicas>
-				      	<vCores>0.1</vCores>
-				    </cloudhub2Deployment>
+				      	<workers>1</workers>
+				      	<workerType>MICRO</workerType>
+				    </cloudhubDeployment>
 				</configuration>
 			</plugin>
 			<plugin>

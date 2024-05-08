@@ -1,4 +1,4 @@
-# Local Configuration
+# DEV Configuration
 
 # Listener Configuration
 http:
@@ -18,5 +18,6 @@ anypointMq:
 
 queue:
   name: "trade-queue"
+      
       
 log.category: "com.employees.debug"
